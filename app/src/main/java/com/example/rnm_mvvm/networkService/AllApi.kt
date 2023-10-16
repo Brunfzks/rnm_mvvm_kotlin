@@ -6,8 +6,8 @@ object AllApi {
 
     const val BASE_URL = "https://rickandmortyapi.com/api/"
 
-    private const val V1 = ""
+    const val PAGE = "page"
 
-    const val DATA_LIST = V1 + "character/"
+    const val DATA_LIST = "character/"
 
 }

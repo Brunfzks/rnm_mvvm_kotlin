@@ -10,8 +10,8 @@ import kotlinx.coroutines.flow.flowOn
 
 class CharacterRepository {
 
-    fun getCharacter(): Flow<RnmReturn> = flow {
-        val r = RetrofitClient.retrofit.getDataList()
+    fun getCharacter(page:Int): Flow<RnmReturn> = flow {
+        val r = RetrofitClient.retrofit.getDataList(page)
         emit(r)
     }.flowOn(Dispatchers.IO)
 }

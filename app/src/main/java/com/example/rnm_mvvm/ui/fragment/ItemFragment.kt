@@ -9,23 +9,23 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.example.rnm_mvvm.adapter.RnmRetunAdapter
-import com.example.rnm_mvvm.databinding.FragmentItemBinding
+import com.example.rnm_mvvm.databinding.FragmentListCharacterBinding
 import com.example.rnm_mvvm.model.Character
 import com.example.rnm_mvvm.model.RnmReturn
 import com.example.rnm_mvvm.networkService.ApiState
 import com.example.rnm_mvvm.repositories.CharacterRepository
 import com.example.rnm_mvvm.viewModel.CharacterViewModel
 import com.example.rnm_mvvm.viewModel.CharacterViewModelFactory
+import kotlinx.coroutines.launch
 
 
 class ItemFragment : Fragment() {
 
     private lateinit var characterVM: CharacterViewModel
 
-    private lateinit var binding: FragmentItemBinding
+    private lateinit var binding: FragmentListCharacterBinding
 
     private lateinit var characterAdapter: RnmRetunAdapter
-    private var items = RnmReturn()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,12 +42,13 @@ class ItemFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentItemBinding.inflate(inflater, container, false)
+        binding = FragmentListCharacterBinding.inflate(inflater, container, false)
         return binding.root
     } // onCreateView
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
 
         initUI()
 
@@ -58,41 +59,45 @@ class ItemFragment : Fragment() {
     } // onViewCreated
 
     private fun initUI() {
-
-        characterAdapter = RnmRetunAdapter(items)
+        characterAdapter = RnmRetunAdapter(characterVM.items)
 
         binding.rvCharacters.adapter = characterAdapter
-
-        binding.srlCharacters.post {
-            characterVM.getCharacter()
-        }
         binding.srlCharacters.setOnRefreshListener {
             characterVM.getCharacter()
         }
+        if (characterVM.items.results.isEmpty()) {
+            binding.srlCharacters.post {
+                characterVM.getCharacter()
+            }
+        }
+
 
     } // initUI
 
     private fun collects() {
 
-        lifecycleScope.launchWhenCreated {
+        lifecycleScope.launch {
             characterVM.wMessage.collect {
                 when (it) {
                     is ApiState.Loading -> {
                         binding.srlCharacters.isRefreshing = true
                     }
+
                     is ApiState.Failure -> {
                         it.e.printStackTrace()
                         binding.srlCharacters.isRefreshing = false
                     }
+
                     is ApiState.Success -> {
 
                         binding.srlCharacters.isRefreshing = false
                         val myObj = it.data as RnmReturn
-                        items.results.clear()
-                        items.results.addAll(myObj.results)
+                        characterVM.items.results.clear()
+                        characterVM.items.results.addAll(myObj.results)
                         characterAdapter.notifyDataSetChanged()
 
                     }
+
                     is ApiState.Empty -> {
                         println("Empty...")
                     }

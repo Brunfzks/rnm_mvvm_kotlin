@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.NonNull
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.example.rnm_mvvm.R
 import com.example.rnm_mvvm.databinding.ItemListBinding
 import com.example.rnm_mvvm.model.Character
 import com.example.rnm_mvvm.model.RnmReturn
@@ -30,7 +32,10 @@ class RnmRetunAdapter(private var items: RnmReturn) :
         val item = items.results[position]
 
         holder.itemBinding.textName.text = item.name
-        holder.itemBinding.imageView.setImageURI(Uri.parse(item.image))
+        holder.itemBinding.textLast.text = item.location?.name
+        holder.itemBinding.textStatus.text = "${item.status} - ${item.species}"
+        holder.itemBinding.statusAlive.setImageResource(if(item.status == "Alive") R.drawable.status_alive_dot else R.drawable.status_death_dot);
+        Glide.with(holder.itemView).load(item.image).into(holder.itemBinding.imageView);
     }
 
     override fun getItemCount(): Int {
@@ -40,12 +45,16 @@ class RnmRetunAdapter(private var items: RnmReturn) :
     inner class MyViewHolder(@NonNull val itemBinding: ItemListBinding) :
         RecyclerView.ViewHolder(itemBinding.root) {
 
-
         init {
 
+            onItemClick?.let {
+                itemBinding.root.setOnClickListener {
+                    it(items.results[adapterPosition])
+                }
+            }
+
+
         }
-
-
     }
 
 }

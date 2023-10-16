@@ -2,9 +2,13 @@ package com.example.rnm_mvvm.ui.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupWithNavController
 import com.example.rnm_mvvm.R
 import com.example.rnm_mvvm.databinding.ActivityMainBinding
 import com.example.rnm_mvvm.ui.fragment.ItemFragment
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 
 class MainActivity : AppCompatActivity() {
@@ -16,12 +20,25 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        supportFragmentManager
-            .beginTransaction()
-            .addToBackStack("ItemFragment")
-            .add(R.id.frameLayout, ItemFragment())
-            .commit()
+//        if(savedInstanceState == null){
+//            supportFragmentManager
+//                .beginTransaction()
+//                .addToBackStack("ItemFragment")
+//                .add(R.id.nav_host_fragment_container, ItemFragment())
+//                .commit()
+//        }
+
+
+        setUpBottomNavigation()
 
     }
+
+    private fun setUpBottomNavigation(){
+        val navView: BottomNavigationView = binding.bnMenu
+        val navController = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_container) as NavHostFragment
+        navView.setupWithNavController(navController.navController)
+
+    }
+
 
 }
