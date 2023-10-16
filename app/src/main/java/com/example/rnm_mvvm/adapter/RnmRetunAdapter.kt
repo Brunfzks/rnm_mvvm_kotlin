@@ -20,6 +20,7 @@ class RnmRetunAdapter(private var items: RnmReturn) :
         this.onItemClick = action
     }
 
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -36,11 +37,17 @@ class RnmRetunAdapter(private var items: RnmReturn) :
         holder.itemBinding.textStatus.text = "${item.status} - ${item.species}"
         holder.itemBinding.statusAlive.setImageResource(if(item.status == "Alive") R.drawable.status_alive_dot else R.drawable.status_death_dot);
         Glide.with(holder.itemView).load(item.image).into(holder.itemBinding.imageView);
+
     }
 
     override fun getItemCount(): Int {
         return items.results.size
     }
+
+    interface  OnListSelected {
+        fun onSelected(character: Character)
+    }
+
 
     inner class MyViewHolder(@NonNull val itemBinding: ItemListBinding) :
         RecyclerView.ViewHolder(itemBinding.root) {

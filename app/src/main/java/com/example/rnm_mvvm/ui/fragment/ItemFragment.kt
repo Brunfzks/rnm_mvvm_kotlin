@@ -4,13 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import com.example.rnm_mvvm.R
 import com.example.rnm_mvvm.adapter.RnmRetunAdapter
 import com.example.rnm_mvvm.databinding.FragmentListCharacterBinding
-import com.example.rnm_mvvm.model.Character
 import com.example.rnm_mvvm.model.RnmReturn
 import com.example.rnm_mvvm.networkService.ApiState
 import com.example.rnm_mvvm.repositories.CharacterRepository
@@ -27,6 +26,7 @@ class ItemFragment : Fragment() {
 
     private lateinit var characterAdapter: RnmRetunAdapter
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -34,7 +34,6 @@ class ItemFragment : Fragment() {
             this,
             CharacterViewModelFactory(CharacterRepository())
         )[CharacterViewModel::class.java]
-
     } // onCreate
 
     override fun onCreateView(
@@ -109,7 +108,18 @@ class ItemFragment : Fragment() {
 
     private fun listeners() {
         characterAdapter.setItemClick {
-            Toast.makeText(activity, "Clicked ${it.name}", Toast.LENGTH_SHORT).show()
+
+            var bundle = Bundle()
+            bundle.putSerializable("desc", it)
+            val fragment = DetailsCharacterFragment()
+            fragment.arguments = bundle
+
+
+            activity?.supportFragmentManager
+                ?.beginTransaction()
+                ?.replace(R.id.nav_host_fragment_container, fragment, "fragmentDetail")
+                ?.addToBackStack(null)
+                ?.commit();
         }
     }
 

@@ -1,6 +1,7 @@
 package com.example.rnm_mvvm.model
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 
 data class Character (
@@ -18,4 +19,4 @@ data class Character (
   @SerializedName("url"      ) var url      : String?           = null,
   @SerializedName("created"  ) var created  : String?           = null
 
-)
+) : Serializable

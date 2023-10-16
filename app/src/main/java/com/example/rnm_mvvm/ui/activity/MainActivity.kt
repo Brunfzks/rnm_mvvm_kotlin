@@ -6,7 +6,9 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.example.rnm_mvvm.R
+import com.example.rnm_mvvm.adapter.RnmRetunAdapter
 import com.example.rnm_mvvm.databinding.ActivityMainBinding
+import com.example.rnm_mvvm.model.Character
 import com.example.rnm_mvvm.ui.fragment.ItemFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
@@ -21,10 +23,10 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
 //        if(savedInstanceState == null){
-//            supportFragmentManager
-//                .beginTransaction()
-//                .addToBackStack("ItemFragment")
-//                .add(R.id.nav_host_fragment_container, ItemFragment())
+//           supportFragmentManager
+//               .beginTransaction()
+//               .addToBackStack("main_fragment")
+//              .add(R.id., ItemFragment())
 //                .commit()
 //        }
 
@@ -39,6 +41,5 @@ class MainActivity : AppCompatActivity() {
         navView.setupWithNavController(navController.navController)
 
     }
-
 
 }
