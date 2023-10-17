@@ -2,19 +2,21 @@ package com.example.rnm_mvvm.ui.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import com.example.rnm_mvvm.App
 import com.example.rnm_mvvm.R
-import com.example.rnm_mvvm.adapter.RnmRetunAdapter
 import com.example.rnm_mvvm.databinding.ActivityMainBinding
-import com.example.rnm_mvvm.model.Character
-import com.example.rnm_mvvm.ui.fragment.ItemFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import retrofit2.Retrofit
+import javax.inject.Inject
 
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
+
+    @Inject
+    lateinit var retrofit: Retrofit
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

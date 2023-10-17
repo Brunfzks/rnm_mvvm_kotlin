@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("kotlin-kapt")
 
 }
 
@@ -86,4 +87,9 @@ dependencies {
 
     //glide image nerwork
     implementation ("com.github.bumptech.glide:glide:4.16.0")
+
+    //Dagger to id
+    var dagger_version = "2.48.1"
+    implementation ("com.google.dagger:dagger:$dagger_version")
+    kapt ("com.google.dagger:dagger-compiler:$dagger_version")
 }
