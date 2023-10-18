@@ -112,7 +112,6 @@ class ItemFragment : Fragment() {
             val fragment = DetailsCharacterFragment()
             fragment.arguments = bundle
 
-
             activity?.supportFragmentManager
                 ?.beginTransaction()
                 ?.replace(R.id.nav_host_fragment_container, fragment, "fragmentDetail")
