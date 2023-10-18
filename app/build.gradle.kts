@@ -92,4 +92,9 @@ dependencies {
     var dagger_version = "2.48.1"
     implementation ("com.google.dagger:dagger:$dagger_version")
     kapt ("com.google.dagger:dagger-compiler:$dagger_version")
+
+    //RXJava to assyncronhus
+    implementation ("io.reactivex.rxjava2:rxjava:2.2.9")
+    implementation ("io.reactivex.rxjava2:rxandroid:2.1.0")
+    implementation ("com.jakewharton.retrofit:retrofit2-rxjava2-adapter:1.0.0")
 }

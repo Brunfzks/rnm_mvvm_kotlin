@@ -2,6 +2,7 @@ package com.example.rnm_mvvm.ui.fragment
 
 import android.app.Application
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,6 +18,7 @@ import com.example.rnm_mvvm.networkService.ApiState
 import com.example.rnm_mvvm.repositories.CharacterRepository
 import com.example.rnm_mvvm.viewModel.CharacterViewModel
 import com.example.rnm_mvvm.viewModel.CharacterViewModelFactory
+import io.reactivex.disposables.CompositeDisposable
 import kotlinx.coroutines.launch
 import retrofit2.Retrofit
 import javax.inject.Inject
@@ -29,6 +31,8 @@ class ItemFragment : Fragment() {
     private lateinit var binding: FragmentListCharacterBinding
 
     private lateinit var characterAdapter: RnmRetunAdapter
+
+    private val mCompositeDisposable = CompositeDisposable()
 
     @Inject
     lateinit var characterRepository: CharacterRepository
@@ -61,8 +65,6 @@ class ItemFragment : Fragment() {
 
         initUI()
 
-        collects() // Like observers of live data
-
         listeners()
 
     } // onViewCreated
@@ -72,11 +74,11 @@ class ItemFragment : Fragment() {
 
         binding.rvCharacters.adapter = characterAdapter
         binding.srlCharacters.setOnRefreshListener {
-            characterVM.getCharacter()
+            collects()
         }
         if (characterVM.items.results.isEmpty()) {
             binding.srlCharacters.post {
-                characterVM.getCharacter()
+                collects()
             }
         }
 
@@ -85,34 +87,20 @@ class ItemFragment : Fragment() {
 
     private fun collects() {
 
-        lifecycleScope.launch {
-            characterVM.wMessage.collect {
-                when (it) {
-                    is ApiState.Loading -> {
-                        binding.srlCharacters.isRefreshing = true
-                    }
+        mCompositeDisposable.clear()
+        binding.srlCharacters.isRefreshing = true
 
-                    is ApiState.Failure -> {
-                        it.e.printStackTrace()
-                        binding.srlCharacters.isRefreshing = false
-                    }
-
-                    is ApiState.Success -> {
-
-                        binding.srlCharacters.isRefreshing = false
-                        val myObj = it.data as RnmReturn
-                        characterVM.items.results.clear()
-                        characterVM.items.results.addAll(myObj.results)
-                        characterAdapter.notifyDataSetChanged()
-
-                    }
-
-                    is ApiState.Empty -> {
-                        println("Empty...")
-                    }
-                }
-            }
-        }
+        mCompositeDisposable.add(
+            characterVM.getCharacter()
+                .subscribe({
+                    binding.srlCharacters.isRefreshing = false
+                    characterVM.items.results.clear()
+                    characterVM.items.results.addAll(it.results)
+                    characterAdapter.notifyDataSetChanged()
+                }, {
+                    binding.srlCharacters.isRefreshing = false
+                })
+        )
 
     } // collects
 
